@@ -26,15 +26,89 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
     public static final String KEY_LECT_COM = "key_lect_com";
     public static final String KEY_LECT_LINK = "key_lect_link";
 
+    private ListView listView;
+
+    private List<Lect> lects;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        listView = (ListView) findViewById(R.id.listViewBooks);
+
+        getLects();
+
+        listView.setOnItemClickListener(this);
     }
+
+    private void getLects(){
+
+        final ProgressDialog loading = ProgressDialog.show(this,"Fetching Data","Please wait...",false,false);
+
+
+        RestAdapter adapter = new RestAdapter.Builder()
+                .setEndpoint(ROOT_URL)
+                .build();
+
+
+        LectAPI api = adapter.create(LectAPI.class);
+
+
+        api.getLects(new Callback<List<Lect>>() {
+            @Override
+            public void success(List<Lect> list, Response response) {
+
+                loading.dismiss();
+
+
+                lects = list;
+
+
+                showList();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                //error handling agar man hua toh
+            }
+        });
+    }
+
+    private void showList(){
+
+        String[] items = new String[lects.size()];
+
+
+        for(int i=0; i<lects.size(); i++){
+
+            items[i] = lects.get(i).getName();
+        }
+
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.simple_list,items);
+
+
+        listView.setAdapter(adapter);
+    }
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(this, ShowLectDetails.class);
+
+        //Getting the requested book from the list
+        Lect lect = lects.get(position);
+
+        //Adding book details to intent
+        intent.putExtra(KEY_LECT_NAME,lect.getName());
+        intent.putExtra(KEY_LECT_SUB,lect.getSubject());
+        intent.putExtra(KEY_LECT_COM,lect.getComment());
+        intent.putExtra(KEY_LECT_LINK,lect.getLink());
+
+        //Starting another activity to show book details
+        startActivity(intent);
 
     }
 }

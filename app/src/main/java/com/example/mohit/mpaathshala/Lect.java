@@ -30,7 +30,7 @@ public class Lect {
         return comment;
     }
 
-    public void setPrice(String price) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
