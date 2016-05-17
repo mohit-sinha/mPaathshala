@@ -32,9 +32,9 @@ public class ShowLectDetails extends AppCompatActivity {
         Intent intent = getIntent();
 
         //Displaying values by fetching from intent
-        textViewLectname.setText(String.valueOf(intent.getIntExtra(MainActivity.KEY_BOOK_ID, 0)));
-        textViewLectsub.setText(intent.getStringExtra(MainActivity.KEY_BOOK_NAME));
-        textViewLectcom.setText(intent.getStringExtra(MainActivity.KEY_BOOK_PRICE));
-        textViewLectlink.setText(String.valueOf(intent.getIntExtra(MainActivity.KEY_BOOK_STOCK,0)));
+        textViewLectname.setText(intent.getStringExtra(MainActivity.KEY_LECT_NAME));
+        textViewLectsub.setText(intent.getStringExtra(MainActivity.KEY_LECT_SUB));
+        textViewLectcom.setText(intent.getStringExtra(MainActivity.KEY_LECT_COM));
+        textViewLectlink.setText(intent.getStringExtra(MainActivity.KEY_LECT_LINK));
     }
 }
