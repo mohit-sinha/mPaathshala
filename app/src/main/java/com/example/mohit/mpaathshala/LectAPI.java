@@ -6,8 +6,8 @@ package com.example.mohit.mpaathshala;
 
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.http.GET;
+import retrofit2.Callback;
+import retrofit2.http.GET;
 
 public interface LectAPI {
 

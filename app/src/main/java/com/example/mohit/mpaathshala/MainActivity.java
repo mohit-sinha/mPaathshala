@@ -11,10 +11,10 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Callback;
+import retrofit2.RestAdapter;
+import retrofit2.RetrofitError;
+import retrofit2.client.Response;
 
 
 public class MainActivity extends AppCompatActivity implements ListView.OnItemClickListener {
