@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listView = (ListView) findViewById(R.id.listViewBooks);
+        listView = (ListView) findViewById(R.id.listViewLects);
 
         getLects();
 
@@ -98,16 +98,16 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, ShowLectDetails.class);
 
-        //Getting the requested book from the list
+
         Lect lect = lects.get(position);
 
-        //Adding book details to intent
+
         intent.putExtra(KEY_LECT_NAME,lect.getName());
         intent.putExtra(KEY_LECT_SUB,lect.getSubject());
         intent.putExtra(KEY_LECT_COM,lect.getComment());
         intent.putExtra(KEY_LECT_LINK,lect.getLink());
 
-        //Starting another activity to show book details
+
         startActivity(intent);
 
     }
