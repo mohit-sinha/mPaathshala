@@ -1,114 +1,60 @@
 package com.example.mohit.mpaathshala;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
+import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.RestAdapter;
-import retrofit2.RetrofitError;
-import retrofit2.client.Response;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
+public class MainActivity extends AppCompatActivity {
 
-public class MainActivity extends AppCompatActivity implements ListView.OnItemClickListener {
-
-    public static final String ROOT_URL = "http://dev.eu5.org/";
-
-    public static final String KEY_LECT_SUB = "key_lect_sub";
-    public static final String KEY_LECT_NAME = "key_lect_name";
-    public static final String KEY_LECT_COM = "key_lect_com";
-    public static final String KEY_LECT_LINK = "key_lect_link";
-
-    private ListView listView;
-
-    private List<Lect> lects;
-
+    private RecyclerView recyclerView;
+    private ArrayList<AndroidVersion> data;
+    private DataAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        listView = (ListView) findViewById(R.id.listViewLects);
-
-        getLects();
-
-        listView.setOnItemClickListener(this);
+        initViews();
     }
-
-    private void getLects(){
-
-        final ProgressDialog loading = ProgressDialog.show(this,"Fetching Data","Please wait...",false,false);
-
-
-        RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint(ROOT_URL)
+    private void initViews(){
+        recyclerView = (RecyclerView)findViewById(R.id.card_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        loadJSON();
+    }
+    private void loadJSON(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.learn2crack.com")
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
-
-        LectAPI api = adapter.create(LectAPI.class);
-
-
-        api.getLects(new Callback<List<Lect>>() {
+        RequestInterface request = retrofit.create(RequestInterface.class);
+        Call<JSONResponse> call = request.getJSON();
+        call.enqueue(new Callback<JSONResponse>() {
             @Override
-            public void success(List<Lect> list, Response response) {
+            public void onResponse(Call<JSONResponse> call, Response<JSONResponse> response) {
 
-                loading.dismiss();
-
-
-                lects = list;
-
-
-                showList();
+                JSONResponse jsonResponse = response.body();
+                data = new ArrayList<>(Arrays.asList(jsonResponse.getAndroid()));
+                adapter = new DataAdapter(data);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                //error handling agar man hua toh
+            public void onFailure(Call<JSONResponse> call, Throwable t) {
+                Log.d("Error",t.getMessage());
             }
         });
-    }
-
-    private void showList(){
-
-        String[] items = new String[lects.size()];
-
-
-        for(int i=0; i<lects.size(); i++){
-
-            items[i] = lects.get(i).getName();
-        }
-
-
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.simple_list,items);
-
-
-        listView.setAdapter(adapter);
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(this, ShowLectDetails.class);
-
-
-        Lect lect = lects.get(position);
-
-
-        intent.putExtra(KEY_LECT_NAME,lect.getName());
-        intent.putExtra(KEY_LECT_SUB,lect.getSubject());
-        intent.putExtra(KEY_LECT_COM,lect.getComment());
-        intent.putExtra(KEY_LECT_LINK,lect.getLink());
-
-
-        startActivity(intent);
-
     }
 }
