@@ -4,24 +4,22 @@ package com.example.mohit.mpaathshala;
  * Created by mohit on 8/6/16.
  */
 public class AndroidVersion {
-    private String topic;
+    private String ver;
     private String name;
-    private String content;
-    private String link;
+    private String api;
+    //private String link;
 
-    public String getTopic() {
-        return topic;
+    public String getVer() {
+        return ver;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getContent() {
-        return content;
+    public String getApi() {
+        return api;
     }
 
-    public String getLink() {
-        return link;
-    }
+
 }

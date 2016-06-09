@@ -6,6 +6,6 @@ import retrofit2.http.GET;
  * Created by mohit on 8/6/16.
  */
 public interface RequestInterface {
-    @GET("/json_encode.php")
+    @GET("android/jsonandroid/")
     Call<JSONResponse> getJSON();
 }
