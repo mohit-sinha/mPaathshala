@@ -33,11 +33,12 @@
 
         <Button
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="90dp"
-            android:layout_height="30dp"
-            android:text="New Button"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="@string/eat"
             android:id="@+id/button"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textSize="15sp" />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

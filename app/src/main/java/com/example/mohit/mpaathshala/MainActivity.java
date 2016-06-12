@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
+
     }
     private void initViews(){
         recyclerView = (RecyclerView)findViewById(R.id.card_recycler_view);
