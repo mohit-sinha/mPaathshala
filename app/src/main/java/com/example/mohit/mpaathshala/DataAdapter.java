@@ -33,7 +33,9 @@ import retrofit2.http.Url;
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private ArrayList<AndroidVersion> android;
 
-    String uri,mTargetFile;
+    String uri;
+    private long enqueue;
+    private DownloadManager dm;
 
 
     public DataAdapter(ArrayList<AndroidVersion> android) {
@@ -53,7 +55,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         viewHolder.tv_name.setText(android.get(i).getName());
         viewHolder.tv_version.setText(android.get(i).getTopic());
         viewHolder.tv_api_level.setText(android.get(i).getContent());
-        //viewHolder.tv_link.setText(android.get(i).getLink());
         uri=android.get(i).getLink();
 
         viewHolder.button.setOnClickListener(new View.OnClickListener(){
@@ -62,23 +63,15 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             {
                 viewHolder.button.setText("Wait");
 
-                Toast.makeText(v.getContext(),"Downloading...",Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(),"Download starting...",Toast.LENGTH_SHORT).show();
 
-                String url = uri;
-                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-                request.setDescription("Some description");
-                request.setTitle("Some title");
+                dm = (DownloadManager) v.getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(uri));
+                enqueue = dm.enqueue(request);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    request.allowScanningByMediaScanner();
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                }
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "name-of-the-file.ext");
+                Toast.makeText(v.getContext(),"Downloaded to default download location",Toast.LENGTH_SHORT).show();
+                viewHolder.button.setText("DOWNLOAD");
 
-
-                DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                manager.enqueue(request);
-                Toast.makeText(v.getContext(),"Downloaded",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -93,7 +86,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView tv_name,tv_version,tv_api_level,tv_link;
+        private TextView tv_name,tv_version,tv_api_level;
         private Button button;
         public ViewHolder(View view) {
             super(view);
@@ -101,7 +94,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             tv_name = (TextView)view.findViewById(R.id.tv_name);
             tv_version = (TextView)view.findViewById(R.id.tv_version);
             tv_api_level = (TextView)view.findViewById(R.id.tv_api_level);
-            //tv_link= (TextView)view.findViewById(R.id.tv_link);
             button= (Button)view.findViewById(R.id.button);
         }
     }
